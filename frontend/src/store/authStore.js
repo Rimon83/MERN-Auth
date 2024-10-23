@@ -112,7 +112,10 @@ export const useAuthStore = create((set) => ({
         email,
       });
       set({ message: response.data.message, isLoading: false });
+      console.log(message)
     } catch (error) {
+      console.error("Forgot password error:", error); // Log the error
+
       set({
         isLoading: false,
         error:
