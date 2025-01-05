@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Lock, Loader } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -8,8 +8,17 @@ import { useAuthStore } from "../store/authStore";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, isLoading, error } = useAuthStore();
+  const [errorMessage, setErrorMessage] = useState("");
+  let { login, isLoading, error } = useAuthStore();
+  
 
+  useEffect(() => {
+    if (error){
+    setErrorMessage(error);
+    error= "";
+    }
+  },[error])
+  
   const handleLogin = async (e) => {
     e.preventDefault();
     await login(email, password);
@@ -32,7 +41,7 @@ const LoginPage = () => {
             type="email"
             placeholder="Email Address"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {setEmail(e.target.value);setErrorMessage(""); }}
           />
 
           <Input
@@ -40,7 +49,7 @@ const LoginPage = () => {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {setPassword(e.target.value); setErrorMessage("")}}
           />
 
           <div className="flex items-center mb-6">
@@ -51,7 +60,7 @@ const LoginPage = () => {
               Forgot password?
             </Link>
           </div>
-          {error && <p className="text-red-500 font-semibold mb-2">{error}</p>}
+          {errorMessage && <p className="text-red-500 font-semibold mb-2">{errorMessage}</p>}
 
           <motion.button
             whileHover={{ scale: 1.02 }}
